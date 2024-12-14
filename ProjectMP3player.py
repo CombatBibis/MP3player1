@@ -1,6 +1,6 @@
 import sys
 import os
-import sounddevice as sd  # Для списка аудиоустройств
+import sounddevice as sd  
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QFileDialog, QPushButton, QSlider, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QWidget
 )
@@ -16,67 +16,67 @@ class MP3Player(QMainWindow):
 
         mixer.init()
 
-        # Установка чёрного фона и серых кнопок
+        
         self.setStyleSheet("background-color: black; color: white;")
         
-        # Основные компоненты интерфейса
-        self.select_button = QPushButton("Выбрать MP3")
+        
+        self.select_button = QPushButton("Г‚Г»ГЎГ°Г ГІГј MP3")
         self.select_button.setStyleSheet("background-color: gray; color: white;")
         self.select_button.clicked.connect(self.load_song)
         
-        self.play_button = QPushButton("Играть")
+        self.play_button = QPushButton("Г€ГЈГ°Г ГІГј")
         self.play_button.setStyleSheet("background-color: gray; color: white;")
         self.play_button.clicked.connect(self.play_song)
         
-        self.pause_button = QPushButton("Пауза")
+        self.pause_button = QPushButton("ГЏГ ГіГ§Г ")
         self.pause_button.setStyleSheet("background-color: gray; color: white;")
         self.pause_button.clicked.connect(self.pause_song)
         
-        self.stop_button = QPushButton("Стоп")
+        self.stop_button = QPushButton("Г‘ГІГ®ГЇ")
         self.stop_button.setStyleSheet("background-color: gray; color: white;")
         self.stop_button.clicked.connect(self.stop_song)
         
-        self.rewind_button = QPushButton("? -5 сек")
+        self.rewind_button = QPushButton("? -5 Г±ГҐГЄ")
         self.rewind_button.setStyleSheet("background-color: gray; color: white;")
         self.rewind_button.clicked.connect(self.rewind)
 
-        self.forward_button = QPushButton("? +5 сек")
+        self.forward_button = QPushButton("? +5 Г±ГҐГЄ")
         self.forward_button.setStyleSheet("background-color: gray; color: white;")
         self.forward_button.clicked.connect(self.forward)
         
-        # Кнопки для регулировки громкости
-        self.volume_down_button = QPushButton("Громкость -")
+        # ГЉГ­Г®ГЇГЄГЁ Г¤Г«Гї Г°ГҐГЈГіГ«ГЁГ°Г®ГўГЄГЁ ГЈГ°Г®Г¬ГЄГ®Г±ГІГЁ
+        self.volume_down_button = QPushButton("ГѓГ°Г®Г¬ГЄГ®Г±ГІГј -")
         self.volume_down_button.setStyleSheet("background-color: gray; color: white;")
         self.volume_down_button.clicked.connect(self.decrease_volume)
         
-        self.volume_up_button = QPushButton("Громкость +")
+        self.volume_up_button = QPushButton("ГѓГ°Г®Г¬ГЄГ®Г±ГІГј +")
         self.volume_up_button.setStyleSheet("background-color: gray; color: white;")
         self.volume_up_button.clicked.connect(self.increase_volume)
 
-        # Метка для отображения названия трека
-        self.track_label = QLabel("Название трека: Нет файла")
+        
+        self.track_label = QLabel("ГЌГ Г§ГўГ Г­ГЁГҐ ГІГ°ГҐГЄГ : ГЌГҐГІ ГґГ Г©Г«Г ")
         self.track_label.setStyleSheet("color: white; padding: 5px;")
 
-        # Метки для отображения времени
+      
         self.current_time_label = QLabel("00:00")
         self.total_time_label = QLabel("00:00")
 
-        # Ползунок для управления текущей позицией трека
+       
         self.slider = QSlider(Qt.Horizontal)
         self.slider.setRange(0, 100)
         self.slider.sliderPressed.connect(self.start_manual_seek)
         self.slider.sliderReleased.connect(self.seek_position)
 
-        # Таймер для обновления ползунка
+      
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_slider)
 
-        # Выпадающий список для выбора устройства вывода звука
+       
         self.output_device_combo = QComboBox()
         self.output_device_combo.addItems(self.get_audio_devices())
         self.output_device_combo.currentIndexChanged.connect(self.change_output_device)
 
-        # Сборка интерфейса
+        
         layout = QVBoxLayout()
         control_layout = QHBoxLayout()
         time_layout = QHBoxLayout()
@@ -95,10 +95,10 @@ class MP3Player(QMainWindow):
         rewind_forward_layout.addWidget(self.rewind_button)
         rewind_forward_layout.addWidget(self.forward_button)
 
-        # Регулировка громкости и выбор устройства вывода
+        
         volume_layout.addWidget(self.volume_down_button)
         volume_layout.addWidget(self.volume_up_button)
-        volume_layout.addWidget(QLabel("Устройство вывода:"))
+        volume_layout.addWidget(QLabel("Г“Г±ГІГ°Г®Г©Г±ГІГўГ® ГўГ»ГўГ®Г¤Г :"))
         volume_layout.addWidget(self.output_device_combo)
 
         layout.addWidget(self.track_label)
@@ -111,40 +111,40 @@ class MP3Player(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
-        # Переменные для трека
+      
         self.filepath = ""
         self.song_length = 0
         self.playing = False
-        self.seeking = False  # Флаг для отслеживания ручного перемещения ползунка
-        self.volume = 0.5  # Начальная громкость (50%)
+        self.seeking = False 
+        self.volume = 0.5 
         mixer.music.set_volume(self.volume)
 
     def get_audio_devices(self):
-        """Получает список доступных аудиоустройств."""
+        """ГЏГ®Г«ГіГ·Г ГҐГІ Г±ГЇГЁГ±Г®ГЄ Г¤Г®Г±ГІГіГЇГ­Г»Гµ Г ГіГ¤ГЁГ®ГіГ±ГІГ°Г®Г©Г±ГІГў."""
         devices = sd.query_devices()
         return [device['name'] for device in devices if device['max_output_channels'] > 0]
 
     def change_output_device(self, index):
-        """Меняет устройство вывода звука."""
+        """ГЊГҐГ­ГїГҐГІ ГіГ±ГІГ°Г®Г©Г±ГІГўГ® ГўГ»ГўГ®Г¤Г  Г§ГўГіГЄГ ."""
         selected_device = self.output_device_combo.currentText()
         sd.default.device = selected_device
 
     def load_song(self):
-        """Загружает MP3-файл и получает его длину, обновляет название."""
-        self.filepath, _ = QFileDialog.getOpenFileName(self, "Выберите MP3-файл", "", "MP3 Files (*.mp3)")
+        """Г‡Г ГЈГ°ГіГ¦Г ГҐГІ MP3-ГґГ Г©Г« ГЁ ГЇГ®Г«ГіГ·Г ГҐГІ ГҐГЈГ® Г¤Г«ГЁГ­Гі, Г®ГЎГ­Г®ГўГ«ГїГҐГІ Г­Г Г§ГўГ Г­ГЁГҐ."""
+        self.filepath, _ = QFileDialog.getOpenFileName(self, "Г‚Г»ГЎГҐГ°ГЁГІГҐ MP3-ГґГ Г©Г«", "", "MP3 Files (*.mp3)")
         if self.filepath:
             try:
-                self.track_label.setText(f"Название трека: {os.path.basename(self.filepath)}")
+                self.track_label.setText(f"ГЌГ Г§ГўГ Г­ГЁГҐ ГІГ°ГҐГЄГ : {os.path.basename(self.filepath)}")
                 audio = MP3(self.filepath)
                 self.song_length = int(audio.info.length)
                 self.total_time_label.setText(self.format_time(self.song_length))
                 self.slider.setRange(0, self.song_length)
             except Exception as e:
-                self.track_label.setText("Ошибка загрузки файла")
-                print(f"Ошибка: {e}")
+                self.track_label.setText("ГЋГёГЁГЎГЄГ  Г§Г ГЈГ°ГіГ§ГЄГЁ ГґГ Г©Г«Г ")
+                print(f"ГЋГёГЁГЎГЄГ : {e}")
 
     def play_song(self):
-        """Запускает воспроизведение MP3 с текущей позиции ползунка."""
+        """Г‡Г ГЇГіГ±ГЄГ ГҐГІ ГўГ®Г±ГЇГ°Г®ГЁГ§ГўГҐГ¤ГҐГ­ГЁГҐ MP3 Г± ГІГҐГЄГіГ№ГҐГ© ГЇГ®Г§ГЁГ¶ГЁГЁ ГЇГ®Г«Г§ГіГ­ГЄГ ."""
         if self.filepath:
             try:
                 mixer.music.load(self.filepath)
@@ -152,10 +152,10 @@ class MP3Player(QMainWindow):
                 self.playing = True
                 self.timer.start(1000)
             except Exception as e:
-                print(f"Ошибка воспроизведения: {e}")
+                print(f"ГЋГёГЁГЎГЄГ  ГўГ®Г±ГЇГ°Г®ГЁГ§ГўГҐГ¤ГҐГ­ГЁГї: {e}")
 
     def pause_song(self):
-        """Ставит на паузу или возобновляет воспроизведение."""
+        """Г‘ГІГ ГўГЁГІ Г­Г  ГЇГ ГіГ§Гі ГЁГ«ГЁ ГўГ®Г§Г®ГЎГ­Г®ГўГ«ГїГҐГІ ГўГ®Г±ГЇГ°Г®ГЁГ§ГўГҐГ¤ГҐГ­ГЁГҐ."""
         if self.playing:
             mixer.music.pause()
             self.playing = False
@@ -164,7 +164,7 @@ class MP3Player(QMainWindow):
             self.playing = True
 
     def stop_song(self):
-        """Останавливает воспроизведение."""
+        """ГЋГ±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГІ ГўГ®Г±ГЇГ°Г®ГЁГ§ГўГҐГ¤ГҐГ­ГЁГҐ."""
         mixer.music.stop()
         self.playing = False
         self.timer.stop()
@@ -172,19 +172,19 @@ class MP3Player(QMainWindow):
         self.current_time_label.setText("00:00")
 
     def rewind(self):
-        """Перематывает на 5 секунд назад."""
+        """ГЏГҐГ°ГҐГ¬Г ГІГ»ГўГ ГҐГІ Г­Г  5 Г±ГҐГЄГіГ­Г¤ Г­Г Г§Г Г¤."""
         position = max(0, self.slider.value() - 5)
         self.slider.setValue(position)
         mixer.music.play(start=position)
     
     def forward(self):
-        """Перематывает на 5 секунд вперед."""
+        """ГЏГҐГ°ГҐГ¬Г ГІГ»ГўГ ГҐГІ Г­Г  5 Г±ГҐГЄГіГ­Г¤ ГўГЇГҐГ°ГҐГ¤."""
         position = min(self.song_length, self.slider.value() + 5)
         self.slider.setValue(position)
         mixer.music.play(start=position)
 
     def update_slider(self):
-        """Обновляет ползунок и время текущего воспроизведения."""
+        """ГЋГЎГ­Г®ГўГ«ГїГҐГІ ГЇГ®Г«Г§ГіГ­Г®ГЄ ГЁ ГўГ°ГҐГ¬Гї ГІГҐГЄГіГ№ГҐГЈГ® ГўГ®Г±ГЇГ°Г®ГЁГ§ГўГҐГ¤ГҐГ­ГЁГї."""
         if self.playing and not self.seeking:
             current_time = mixer.music.get_pos() // 1000
             if current_time < self.song_length:
@@ -194,11 +194,11 @@ class MP3Player(QMainWindow):
                 self.stop_song()
 
     def start_manual_seek(self):
-        """Устанавливает флаг, что пользователь вручную перемещает ползунок."""
+        """Г“Г±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГІ ГґГ«Г ГЈ, Г·ГІГ® ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј ГўГ°ГіГ·Г­ГіГѕ ГЇГҐГ°ГҐГ¬ГҐГ№Г ГҐГІ ГЇГ®Г«Г§ГіГ­Г®ГЄ."""
         self.seeking = True
     
     def seek_position(self):
-        """Перематывает на выбранное положение и начинает воспроизведение с текущей позиции."""
+        """ГЏГҐГ°ГҐГ¬Г ГІГ»ГўГ ГҐГІ Г­Г  ГўГ»ГЎГ°Г Г­Г­Г®ГҐ ГЇГ®Г«Г®Г¦ГҐГ­ГЁГҐ ГЁ Г­Г Г·ГЁГ­Г ГҐГІ ГўГ®Г±ГЇГ°Г®ГЁГ§ГўГҐГ¤ГҐГ­ГЁГҐ Г± ГІГҐГЄГіГ№ГҐГ© ГЇГ®Г§ГЁГ¶ГЁГЁ."""
         if self.filepath:
             position = self.slider.value()
             mixer.music.load(self.filepath)
@@ -207,17 +207,17 @@ class MP3Player(QMainWindow):
             self.seeking = False
 
     def decrease_volume(self):
-        """Уменьшает громкость."""
+        """Г“Г¬ГҐГ­ГјГёГ ГҐГІ ГЈГ°Г®Г¬ГЄГ®Г±ГІГј."""
         self.volume = max(0, self.volume - 0.1)
         mixer.music.set_volume(self.volume)
 
     def increase_volume(self):
-        """Увеличивает громкость."""
-        self.volume = min(1, self.volume + 0.1)  # Устанавливаем максимум 100%
+        """Г“ГўГҐГ«ГЁГ·ГЁГўГ ГҐГІ ГЈГ°Г®Г¬ГЄГ®Г±ГІГј."""
+        self.volume = min(1, self.volume + 0.1)  
         mixer.music.set_volume(self.volume)
 
     def format_time(self, seconds):
-        """Форматирует время в mm:ss."""
+        """Г”Г®Г°Г¬Г ГІГЁГ°ГіГҐГІ ГўГ°ГҐГ¬Гї Гў mm:ss."""
         minutes = seconds // 60
         seconds = seconds % 60
         return f"{int(minutes):02}:{int(seconds):02}"
